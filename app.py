@@ -14,19 +14,43 @@ load_dotenv()
 
 
 machine = TocMachine(
-    states=["user", "state1", "state2"],
+    states=["user", "start", "index", "search", "taiwan_index", "USA_index", "index_search"],
     transitions=[
         {
             "trigger": "advance",
             "source": "user",
-            "dest": "state1",
-            "conditions": "is_going_to_state1",
+            "dest": "start",
+            "conditions": "is_going_to_start",
         },
         {
             "trigger": "advance",
-            "source": "user",
-            "dest": "state2",
-            "conditions": "is_going_to_state2",
+            "source": "start",
+            "dest": "index",
+            "conditions": "is_going_to_index",
+        },
+        {
+            "trigger": "advance",
+            "source": "start",
+            "dest": "search",
+            "conditions": "is_going_to_search",
+        },
+        {
+            "trigger": "advance",
+            "source": "index",
+            "dest": "USA_index",
+            "conditions": "is_going_to_USA_index",
+        },
+        {
+            "trigger": "advance",
+            "source": "USA_index",
+            "dest": "index_search",
+            "conditions": "is_going_to_index_search",
+        },
+        {
+            "trigger": "advance",
+            "source": "index",
+            "dest": "index_search",
+            "conditions": "is_going_to_index_search",
         },
         {"trigger": "go_back", "source": ["state1", "state2"], "dest": "user"},
     ],
@@ -57,7 +81,6 @@ def webhook_handler():
     signature = request.headers["X-Line-Signature"]
     # get request body as text
     body = request.get_data(as_text=True)
-    app.logger.info(f"Request body: {body}")
 
     # parse webhook body
     try:
@@ -74,15 +97,10 @@ def webhook_handler():
         if not isinstance(event.message.text, str):
             continue
         
+        print(machine.state)
         response = machine.advance(event)
         if response == False:
             send_text_message(event.reply_token, "請依照指示與按鈕來操作!")
-            if event.message.text.lower() == 'fsm':
-                send_text_message(event.reply_token, 'jjjjjj')
-            elif machine.state != 'user' and event.message.text.lower() == 'restart':
-                print("dddddddddddddddddddddddddddddddddddddddddddddddd")
-                send_text_message(event.reply_token, '輸入『fitness』即可開始使用健身小幫手。\n隨時輸入『chat』可以跟機器人聊天。\n隨時輸入『restart』可以從頭開始。\n隨時輸入『fsm』可以得到當下的狀態圖。')
-                machine.go_back()
 
     return "OK"
 
