@@ -8,8 +8,11 @@ transitions = "*"
 pygraphviz = "*"
 numpy = "*"
 line-bot-sdk = "*"
+flask = "*"
+python-dotenv = "*"
 
 [dev-packages]
+pylint = "*"
 
 [requires]
 python_version = "3.8"
