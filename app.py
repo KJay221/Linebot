@@ -12,45 +12,34 @@ from utils import send_text_message
 
 load_dotenv()
 
+#create img folder
+img_folder_path = "./img"
+try:
+    os.mkdir(img_folder_path)
+except OSError:
+    print ("Creation of the directory %s failed" % img_folder_path)
 
 machine = TocMachine(
-    states=["user", "start", "index", "search", "taiwan_index", "USA_index", "index_search"],
+    states=["user", "start", "index", "search", "USA_index", "index_search", "index_chart"],
     transitions=[
-        {
-            "trigger": "advance",
-            "source": "user",
-            "dest": "start",
-            "conditions": "is_going_to_start",
-        },
-        {
-            "trigger": "advance",
-            "source": "start",
-            "dest": "index",
-            "conditions": "is_going_to_index",
-        },
+        {"trigger": "advance","source": "user","dest": "start","conditions": "is_going_to_start"},
+        {"trigger": "advance","source": "start","dest": "index","conditions": "is_going_to_index"},
+        {"trigger": "advance","source": "index","dest": "start","conditions": "is_going_to_start"},
+        {"trigger": "advance","source": "index","dest": "USA_index","conditions": "is_going_to_USA_index"},
+        {"trigger": "advance","source": "USA_index","dest": "index_search","conditions": "is_going_to_index_search"},
+        {"trigger": "advance","source": "index","dest": "index_search","conditions": "is_going_to_index_search"},
+        {"trigger": "advance","source": "index_search","dest": "index_chart","conditions": "is_going_to_index_chart"},
+        {"trigger": "advance","source": "index_search","dest": "index","conditions": "is_going_to_index"},
+        {"trigger": "advance","source": "index_chart","dest": "index_search","conditions": "is_going_to_index_search"},
+        {"trigger": "advance","source": "index_chart","dest": "start","conditions": "is_going_to_start"},
+
+
+
         {
             "trigger": "advance",
             "source": "start",
             "dest": "search",
             "conditions": "is_going_to_search",
-        },
-        {
-            "trigger": "advance",
-            "source": "index",
-            "dest": "USA_index",
-            "conditions": "is_going_to_USA_index",
-        },
-        {
-            "trigger": "advance",
-            "source": "USA_index",
-            "dest": "index_search",
-            "conditions": "is_going_to_index_search",
-        },
-        {
-            "trigger": "advance",
-            "source": "index",
-            "dest": "index_search",
-            "conditions": "is_going_to_index_search",
         },
         {"trigger": "go_back", "source": ["state1", "state2"], "dest": "user"},
     ],
@@ -97,8 +86,8 @@ def webhook_handler():
         if not isinstance(event.message.text, str):
             continue
         
-        print(machine.state)
         response = machine.advance(event)
+        print(machine.state)
         if response == False:
             send_text_message(event.reply_token, "請依照指示與按鈕來操作!")
 

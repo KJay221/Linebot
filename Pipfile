@@ -8,8 +8,12 @@ transitions = "*"
 pygraphviz = "*"
 numpy = "*"
 line-bot-sdk = "*"
-flask = "*"
+Flask = "*"
 python-dotenv = "*"
+beautifulsoup4 = "*"
+requests = "*"
+CairoSVG = "*"
+pyimgur = "*"
 
 [dev-packages]
 pylint = "*"
