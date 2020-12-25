@@ -89,7 +89,6 @@ def webhook_handler():
             response = machine.advance(event)
         else:
             response = False
-        print(machine.state)
         if response == False:
             if machine.state != 'user':
                 if event.message.text.lower() == 'menu':
