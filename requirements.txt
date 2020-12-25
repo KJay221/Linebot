@@ -1,5 +1,4 @@
 -i https://pypi.org/simple
-pip==20.0.2
 astroid==2.4.2
 beautifulsoup4==4.9.3
 cairocffi==1.2.0
