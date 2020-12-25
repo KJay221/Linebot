@@ -13,40 +13,39 @@ from utils import send_text_message
 load_dotenv()
 
 #create img folder
-img_folder_path = "./img"
-try:
-    os.mkdir(img_folder_path)
-except OSError:
-    print ("Creation of the directory %s failed" % img_folder_path)
+if not os.path.exists("./img"):
+    img_folder_path = "./img"
+    try:
+        os.mkdir(img_folder_path)
+    except OSError:
+        print ("Creation of the directory %s failed" % img_folder_path)
 
 machine = TocMachine(
-    states=["user", "start", "index", "search", "USA_index", "index_search", "index_chart"],
+    states=["user", "begin", "fsm", "start", "index", "search", "USA_index", "index_search", "index_chart", "TW_index", "TW_history", "TW_now"],
     transitions=[
-        {"trigger": "advance","source": "user","dest": "start","conditions": "is_going_to_start"},
-        {"trigger": "advance","source": "start","dest": "index","conditions": "is_going_to_index"},
-        {"trigger": "advance","source": "index","dest": "start","conditions": "is_going_to_start"},
+        {"trigger": "advance","source": ["user","start"],"dest": "begin","conditions": "is_going_to_begin"},
+        {"trigger": "advance","source": "begin","dest": "fsm","conditions": "is_going_to_fsm"},
+        {"trigger": "advance","source": ["begin","index","index_chart","TW_now","TW_history"],"dest": "start","conditions": "is_going_to_start"},
+        {"trigger": "advance","source": ["start","TW_index","index_search"],"dest": "index","conditions": "is_going_to_index"},
         {"trigger": "advance","source": "index","dest": "USA_index","conditions": "is_going_to_USA_index"},
-        {"trigger": "advance","source": "USA_index","dest": "index_search","conditions": "is_going_to_index_search"},
-        {"trigger": "advance","source": "index","dest": "index_search","conditions": "is_going_to_index_search"},
+        {"trigger": "advance","source": ["USA_index","index_chart"],"dest": "index_search","conditions": "is_going_to_index_search"},
         {"trigger": "advance","source": "index_search","dest": "index_chart","conditions": "is_going_to_index_chart"},
-        {"trigger": "advance","source": "index_search","dest": "index","conditions": "is_going_to_index"},
-        {"trigger": "advance","source": "index_chart","dest": "index_search","conditions": "is_going_to_index_search"},
-        {"trigger": "advance","source": "index_chart","dest": "start","conditions": "is_going_to_start"},
+        {"trigger": "advance","source": ["index","TW_now","TW_history"],"dest": "TW_index","conditions": "is_going_to_TW_index"},
+        {"trigger": "advance","source": "TW_index","dest": "TW_now","conditions": "is_going_to_TW_now"},
+        {"trigger": "advance","source": "TW_index","dest": "TW_history","conditions": "is_going_to_TW_history"},
 
 
 
-        {
-            "trigger": "advance",
-            "source": "start",
-            "dest": "search",
-            "conditions": "is_going_to_search",
-        },
-        {"trigger": "go_back", "source": ["state1", "state2"], "dest": "user"},
+
+        {"trigger": "advance","source": "start","dest": "search","conditions": "is_going_to_search",},
+        #back
+        {"trigger": "go_back", "source": ["fsm"], "dest": "begin"},
     ],
     initial="user",
     auto_transitions=False,
     show_conditions=True,
 )
+machine.get_graph().draw("./img/fsm.png", prog="dot", format="png")
 
 app = Flask(__name__, static_url_path="")
 
@@ -86,10 +85,19 @@ def webhook_handler():
         if not isinstance(event.message.text, str):
             continue
         
-        response = machine.advance(event)
+        if machine.state != "fsm":
+            response = machine.advance(event)
+        else:
+            response = False
         print(machine.state)
         if response == False:
-            send_text_message(event.reply_token, "請依照指示與按鈕來操作!")
+            if machine.state != 'user':
+                if event.message.text.lower() == 'menu':
+                    machine.go_back(event)
+                else:
+                    send_text_message(event.reply_token, "請依照指示與按鈕來操作!\n或輸入menu返回主選單")
+            else:
+                send_text_message(event.reply_token, "請輸入『start』開始")
 
     return "OK"
 

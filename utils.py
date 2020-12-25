@@ -1,7 +1,7 @@
 import os
 
 from linebot import LineBotApi, WebhookParser
-from linebot.models import MessageEvent, TextMessage, TextSendMessage,FlexSendMessage
+from linebot.models import MessageEvent, TextMessage, TextSendMessage,FlexSendMessage,ImageSendMessage
 
 
 channel_access_token = os.getenv("LINE_CHANNEL_ACCESS_TOKEN", None)
@@ -17,5 +17,15 @@ def send_flex_message(reply_token, text, message):
     line_bot_api = LineBotApi(channel_access_token)
     message_to_reply = FlexSendMessage(text, message)
     line_bot_api.reply_message(reply_token, message_to_reply)
+
+    return "OK"
+
+def send_image_message(reply_token, url):
+    line_bot_api = LineBotApi(channel_access_token)
+    message = ImageSendMessage(
+        original_content_url = url,
+        preview_image_url = url
+    )
+    line_bot_api.reply_message(reply_token, message)
 
     return "OK"

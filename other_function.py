@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import cairosvg
 import pyimgur
 from dotenv import load_dotenv
+import urllib.request
 
 import flex_message
 
@@ -16,6 +17,8 @@ if imgur_key is None:
     print("Specify IMGUR_KEY as environment variable.")
     sys.exit(1)
 
+
+#index chart generate and change flex_message img
 def get_index_chart(index, index_chart_range):
     #get svg url
     chart_url_str = ""
@@ -63,5 +66,53 @@ def get_index_chart(index, index_chart_range):
 
     #change display img
     flex_message.index_chart["body"]["contents"][2]["url"] = uploaded_image.link
-            
-            
+
+#change TW_now style and content
+def change_TW_now():
+    text_request = urllib.request.urlopen("https://invest.cnyes.com/index/TWS/TSE01")
+    soup = BeautifulSoup(text_request,"html.parser")
+    final_price = soup.find("div",class_="jsx-2941083017 info-lp")
+    amplitude = soup.find("div",class_="jsx-2941083017 change-net")
+    up_down = soup.find("div",class_="jsx-2941083017 change-percent")
+    flex_message.index_TW_now["body"]["contents"][2]["contents"][1]["text"] = final_price.text
+    flex_message.index_TW_now["body"]["contents"][3]["contents"][1]["text"] = amplitude.text
+    flex_message.index_TW_now["body"]["contents"][4]["contents"][1]["text"] = up_down.text
+    if amplitude.text[0] == "+":
+        flex_message.index_TW_now["body"]["contents"][2]["contents"][1]["color"] = "#ff0000"
+        flex_message.index_TW_now["body"]["contents"][3]["contents"][1]["color"] = "#ff0000"
+        flex_message.index_TW_now["body"]["contents"][4]["contents"][1]["color"] = "#ff0000"
+    elif amplitude.text[0] == "-":
+        flex_message.index_TW_now["body"]["contents"][2]["contents"][1]["color"] = "#5be300"
+        flex_message.index_TW_now["body"]["contents"][3]["contents"][1]["color"] = "#5be300"
+        flex_message.index_TW_now["body"]["contents"][4]["contents"][1]["color"] = "#5be300"
+    else:
+        flex_message.index_TW_now["body"]["contents"][2]["contents"][1]["color"] = "#ffea00"
+        flex_message.index_TW_now["body"]["contents"][3]["contents"][1]["color"] = "#ffea00"
+        flex_message.index_TW_now["body"]["contents"][4]["contents"][1]["color"] = "#ffea00"
+
+#change TW_history style and content
+def change_TW_history():
+    text_request = urllib.request.urlopen("https://www.taiwanindex.com.tw/index/index/t00")
+    soup = BeautifulSoup(text_request,"html.parser")
+    rate = soup.find_all("td")
+    stop = 0
+    number = 2
+    for t in rate:
+        if stop == 15 or stop == 17 or stop == 19 or stop == 21 or stop == 23 or stop == 25:
+            text = t.text
+            flex_message.index_TW_history["body"]["contents"][number]["contents"][1]["text"] = text
+            if text[0] == "-":
+                flex_message.index_TW_history["body"]["contents"][number]["contents"][1]["color"] = "#5be300"
+            else:
+                flex_message.index_TW_history["body"]["contents"][number]["contents"][1]["color"] = "#ff0000"
+            number+=2
+        stop+=1
+
+def show_fsm_link():
+    # upload to imgur and get url
+    client_ID = imgur_key
+    img_path = "./img/fsm.png"
+    im = pyimgur.Imgur(client_ID)
+    uploaded_image = im.upload_image(path=img_path, title="upload")
+    return uploaded_image.link
+        
