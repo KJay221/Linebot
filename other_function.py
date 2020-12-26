@@ -17,7 +17,6 @@ if imgur_key is None:
     print("Specify IMGUR_KEY as environment variable.")
     sys.exit(1)
 
-
 #index chart generate and change flex_message img
 def get_index_chart(index, index_chart_range):
     #get svg url
@@ -115,4 +114,28 @@ def show_fsm_link():
     im = pyimgur.Imgur(client_ID)
     uploaded_image = im.upload_image(path=img_path, title="upload")
     return uploaded_image.link
-        
+
+def find_stock(stock):
+    for index in range(1,32):
+        url_c=""
+        if index == 7 or index == 13 or index == 19:
+            continue
+        else:
+            if index < 10:
+                url_c = "0"+str(index)
+            else:
+                url_c = str(index)
+        list_request = urllib.request.urlopen("https://www.cnyes.com/twstock/index2real.aspx?stockType=T&groupId="+url_c+"&stitle=")
+        data = list_request.read().decode('utf-8')
+        soup = BeautifulSoup(data,"html.parser")
+        n_text = soup.find_all("a",href = "/twstock/profile/"+stock+".htm")
+        if n_text:
+            return True
+        s_text = soup.find_all("a")
+        for content in s_text:
+            if stock == content.string:
+                number1 = content["href"]
+                number2 = number1.split('/')
+                number3 = number2[3].split(".")
+                return number3[0]
+    return False
