@@ -21,7 +21,7 @@ if not os.path.exists("./img"):
         print ("Creation of the directory %s failed" % img_folder_path)
 
 machine = TocMachine(
-    states=["user", "begin", "fsm", "start", "index", "search", "USA_index", "index_search", "index_chart", "TW_index", "TW_history", "TW_now"],
+    states=["user", "begin", "fsm", "start", "index", "search", "USA_index", "index_search", "index_chart", "TW_index", "TW_history", "TW_now", "stock_list"],
     transitions=[
         {"trigger": "advance","source": ["user","start"],"dest": "begin","conditions": "is_going_to_begin"},
         {"trigger": "advance","source": "begin","dest": "fsm","conditions": "is_going_to_fsm"},
@@ -33,11 +33,8 @@ machine = TocMachine(
         {"trigger": "advance","source": ["index","TW_now","TW_history"],"dest": "TW_index","conditions": "is_going_to_TW_index"},
         {"trigger": "advance","source": "TW_index","dest": "TW_now","conditions": "is_going_to_TW_now"},
         {"trigger": "advance","source": "TW_index","dest": "TW_history","conditions": "is_going_to_TW_history"},
-
-
-
-
         {"trigger": "advance","source": "start","dest": "search","conditions": "is_going_to_search",},
+        {"trigger": "advance","source": "search","dest": "stock_list","conditions": "is_going_to_stock_list",},
         #back
         {"trigger": "go_back", "source": ["fsm"], "dest": "begin"},
     ],
@@ -90,7 +87,9 @@ def webhook_handler():
         else:
             response = False
         if response == False:
-            if machine.state != 'user':
+            if machine.state == 'search':
+                send_text_message(event.reply_token, "股票名稱或代碼不存在請再次輸入\n或輸入menu返回主選單")
+            elif machine.state != 'user':
                 if event.message.text.lower() == 'menu':
                     machine.go_back(event)
                 else:

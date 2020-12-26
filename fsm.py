@@ -7,6 +7,7 @@ import other_function
 
 index=""
 index_chart_range=""
+stock=""
 
 class TocMachine(GraphMachine):
     def __init__(self, **machine_configs):
@@ -123,11 +124,25 @@ class TocMachine(GraphMachine):
         other_function.change_TW_history()
         send_flex_message(reply_token,"index_TW_history",flex_message.index_TW_history)
     
-    
-    
-    
-    
-    
     def is_going_to_search(self, event):
         text = event.message.text
         return text.lower() == "台股查詢"
+    
+    def on_enter_search(self, event):
+        reply_token = event.reply_token
+        send_text_message(reply_token, "請輸入股票名稱或代碼")
+    
+    def is_going_to_stock_list(self, event):
+        global stock
+        text = event.message.text
+        output = other_function.find_stock(text)
+        if  output == True or output == False:
+            stock = text
+            return output
+        else:
+            stock = output
+            return True
+    
+    def on_enter_stock_list(self, event):
+        reply_token = event.reply_token
+        send_text_message(reply_token, stock)
