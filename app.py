@@ -36,7 +36,7 @@ machine = TocMachine(
         {"trigger": "advance","source": "start","dest": "search","conditions": "is_going_to_search",},
         {"trigger": "advance","source": "search","dest": "stock_list","conditions": "is_going_to_stock_list",},
         #back
-        {"trigger": "go_back", "source": ["fsm"], "dest": "begin"},
+        {"trigger": "go_back", "source": ["fsm","stock_list"], "dest": "begin"},
     ],
     initial="user",
     auto_transitions=False,
