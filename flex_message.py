@@ -825,3 +825,453 @@ begin = {
     "flex": 0
   }
 }
+
+stock_list = {
+  "type": "bubble",
+  "hero": {
+    "type": "image",
+    "url": "https://i.imgur.com/t2wR0bY.png",
+    "size": "full",
+    "aspectRatio": "20:20",
+    "aspectMode": "cover"
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "台積電",
+        "weight": "bold",
+        "size": "xl",
+        "align": "center"
+      },
+      {
+        "type": "text",
+        "text": "代碼：2330",
+        "align": "center"
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "button",
+        "style": "link",
+        "height": "sm",
+        "action": {
+          "type": "message",
+          "label": "即時資訊",
+          "text": "即時資訊"
+        }
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "type": "button",
+        "action": {
+          "type": "message",
+          "label": "歷史績效",
+          "text": "歷史績效"
+        }
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "type": "button",
+        "action": {
+          "type": "message",
+          "label": "推薦程度",
+          "text": "推薦程度"
+        }
+      },
+      {
+        "type": "button",
+        "action": {
+          "type": "message",
+          "label": "重新輸入股票",
+          "text": "重新輸入股票"
+        },
+        "style": "primary"
+      }
+    ],
+    "flex": 0
+  }
+}
+
+stock_now = {
+  "type": "bubble",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "台積電",
+            "weight": "bold",
+            "size": "xl",
+            "align": "center"
+          },
+          {
+            "type": "text",
+            "text": "代碼：2330",
+            "align": "center"
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+          {
+            "type": "text",
+            "text": "成交：",
+            "size": "lg",
+            "align": "start"
+          },
+          {
+            "type": "text",
+            "text": "100",
+            "size": "lg"
+          }
+        ],
+        "margin": "md"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+          {
+            "type": "text",
+            "text": "漲跌：",
+            "size": "lg",
+            "align": "start"
+          },
+          {
+            "type": "text",
+            "text": "100",
+            "size": "lg"
+          }
+        ],
+        "margin": "md"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+          {
+            "type": "text",
+            "text": "幅度：",
+            "size": "lg",
+            "align": "start"
+          },
+          {
+            "type": "text",
+            "text": "100",
+            "size": "lg"
+          }
+        ],
+        "margin": "md"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+          {
+            "type": "text",
+            "text": "成交張數：",
+            "size": "lg",
+            "align": "start"
+          },
+          {
+            "type": "text",
+            "text": "100",
+            "size": "lg"
+          }
+        ],
+        "margin": "md"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+          {
+            "type": "text",
+            "text": "昨收：",
+            "size": "lg",
+            "align": "start"
+          },
+          {
+            "type": "text",
+            "text": "100",
+            "size": "lg"
+          }
+        ],
+        "margin": "md"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+          {
+            "type": "text",
+            "text": "開盤：",
+            "size": "lg",
+            "align": "start"
+          },
+          {
+            "type": "text",
+            "text": "100",
+            "size": "lg"
+          }
+        ],
+        "margin": "md"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "內外盤比",
+            "size": "lg",
+            "align": "center"
+          },
+          {
+            "type": "box",
+            "layout": "baseline",
+            "contents": [
+              {
+                "type": "text",
+                "text": "50%",
+                "align": "center",
+                "size": "xl",
+                "color": "#00e038"
+              },
+              {
+                "type": "text",
+                "text": "50%",
+                "align": "center",
+                "color": "#ff0000",
+                "size": "xl"
+              }
+            ]
+          }
+        ],
+        "margin": "md"
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "separator"
+      },
+      {
+        "type": "button",
+        "action": {
+          "type": "message",
+          "label": "返回查詢",
+          "text": "返回查詢"
+        },
+        "style": "primary"
+      },
+      {
+        "type": "button",
+        "action": {
+          "type": "message",
+          "label": "回主選單",
+          "text": "回主選單"
+        },
+        "style": "primary"
+      }
+    ],
+    "flex": 0
+  }
+}
+
+stock_history = {
+  "type": "bubble",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "台積電",
+        "size": "xl"
+      },
+      {
+        "type": "text",
+        "text": "歷史績效",
+        "margin": "xs"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+          {
+            "type": "text",
+            "text": "1週：",
+            "size": "lg"
+          },
+          {
+            "type": "text",
+            "text": "100",
+            "size": "lg",
+            "color": "#ff0000"
+          }
+        ],
+        "margin": "xxl"
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+          {
+            "type": "text",
+            "text": "1月：",
+            "size": "lg"
+          },
+          {
+            "type": "text",
+            "text": "100",
+            "size": "lg",
+            "color": "#ff0000"
+          }
+        ],
+        "margin": "xxl"
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+          {
+            "type": "text",
+            "text": "3月：",
+            "size": "lg"
+          },
+          {
+            "type": "text",
+            "text": "100",
+            "size": "lg",
+            "color": "#ff0000"
+          }
+        ],
+        "margin": "xxl"
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+          {
+            "type": "text",
+            "text": "6月：",
+            "size": "lg"
+          },
+          {
+            "type": "text",
+            "text": "100",
+            "size": "lg",
+            "color": "#ff0000"
+          }
+        ],
+        "margin": "xxl"
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+          {
+            "type": "text",
+            "text": "1年：",
+            "size": "lg"
+          },
+          {
+            "type": "text",
+            "text": "100",
+            "size": "lg",
+            "color": "#ff0000"
+          }
+        ],
+        "margin": "xxl"
+      },
+      {
+        "type": "separator"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+          {
+            "type": "text",
+            "text": "今年以來：",
+            "size": "lg"
+          },
+          {
+            "type": "text",
+            "text": "100",
+            "size": "lg",
+            "color": "#ff0000"
+          }
+        ],
+        "margin": "xxl"
+      },
+      {
+        "type": "separator"
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "button",
+        "height": "sm",
+        "action": {
+          "type": "message",
+          "label": "返回查詢",
+          "text": "返回查詢"
+        },
+        "style": "primary"
+      },
+      {
+        "type": "button",
+        "action": {
+          "type": "message",
+          "label": "回主選單",
+          "text": "回主選單"
+        },
+        "height": "sm",
+        "style": "primary"
+      }
+    ],
+    "flex": 0
+  }
+}

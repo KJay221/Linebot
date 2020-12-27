@@ -7,7 +7,7 @@ import other_function
 
 index=""
 index_chart_range=""
-stock=""
+stock=[]
 
 class TocMachine(GraphMachine):
     def __init__(self, **machine_configs):
@@ -35,7 +35,7 @@ class TocMachine(GraphMachine):
 
     def is_going_to_start(self, event):
         text = event.message.text
-        if text == "開始使用" or text == "回主選單":
+        if text == "開始使用" or text == "回主選單" or text.lower() == "back":
             return True
         else:
             return False
@@ -126,7 +126,10 @@ class TocMachine(GraphMachine):
     
     def is_going_to_search(self, event):
         text = event.message.text
-        return text.lower() == "台股查詢"
+        if text == "台股查詢" or text == "重新輸入股票":
+            return True
+        else:
+            return False
     
     def on_enter_search(self, event):
         reply_token = event.reply_token
@@ -135,14 +138,38 @@ class TocMachine(GraphMachine):
     def is_going_to_stock_list(self, event):
         global stock
         text = event.message.text
+        if text == "返回查詢":
+            return True
         output = other_function.find_stock(text)
-        if  output == True or output == False:
-            stock = text
-            return output
+        if output == False:
+            return False
         else:
             stock = output
             return True
     
     def on_enter_stock_list(self, event):
+        global stock
         reply_token = event.reply_token
-        send_text_message(reply_token, stock)
+        flex_message.stock_list["body"]["contents"][0]["text"] = stock[1]
+        flex_message.stock_list["body"]["contents"][1]["text"] = ("代碼："+stock[0])
+        send_flex_message(reply_token,"stock_list",flex_message.stock_list)
+    
+    def is_going_to_stock_now(self, event):
+        text = event.message.text
+        return text == "即時資訊"
+    
+    def on_enter_stock_now(self, event):
+        reply_token = event.reply_token
+        other_function.change_stock_now(stock[0])
+        flex_message.stock_now["body"]["contents"][0]["contents"][0]["text"] = stock[1]
+        flex_message.stock_now["body"]["contents"][0]["contents"][1]["text"] = stock[0]
+        send_flex_message(reply_token,"stock_list",flex_message.stock_now)
+
+    def is_going_to_stock_history(self, event):
+        text = event.message.text
+        return text == "歷史績效"
+    
+    def on_enter_stock_history(self, event):
+        reply_token = event.reply_token
+        other_function.change_stock_history(stock[0])
+        send_flex_message(reply_token,"stock_list",flex_message.stock_history)

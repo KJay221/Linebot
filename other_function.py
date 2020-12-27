@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 
 import requests
 from bs4 import BeautifulSoup
@@ -11,6 +12,7 @@ import urllib.request
 import flex_message
 
 load_dotenv()
+
 
 imgur_key = os.getenv("IMGUR_KEY", None)
 if imgur_key is None:
@@ -81,9 +83,9 @@ def change_TW_now():
         flex_message.index_TW_now["body"]["contents"][3]["contents"][1]["color"] = "#ff0000"
         flex_message.index_TW_now["body"]["contents"][4]["contents"][1]["color"] = "#ff0000"
     elif amplitude.text[0] == "-":
-        flex_message.index_TW_now["body"]["contents"][2]["contents"][1]["color"] = "#5be300"
-        flex_message.index_TW_now["body"]["contents"][3]["contents"][1]["color"] = "#5be300"
-        flex_message.index_TW_now["body"]["contents"][4]["contents"][1]["color"] = "#5be300"
+        flex_message.index_TW_now["body"]["contents"][2]["contents"][1]["color"] = "#00e038"
+        flex_message.index_TW_now["body"]["contents"][3]["contents"][1]["color"] = "#00e038"
+        flex_message.index_TW_now["body"]["contents"][4]["contents"][1]["color"] = "#00e038"
     else:
         flex_message.index_TW_now["body"]["contents"][2]["contents"][1]["color"] = "#ffea00"
         flex_message.index_TW_now["body"]["contents"][3]["contents"][1]["color"] = "#ffea00"
@@ -101,7 +103,7 @@ def change_TW_history():
             text = t.text
             flex_message.index_TW_history["body"]["contents"][number]["contents"][1]["text"] = text
             if text[0] == "-":
-                flex_message.index_TW_history["body"]["contents"][number]["contents"][1]["color"] = "#5be300"
+                flex_message.index_TW_history["body"]["contents"][number]["contents"][1]["color"] = "#00e038"
             else:
                 flex_message.index_TW_history["body"]["contents"][number]["contents"][1]["color"] = "#ff0000"
             number+=2
@@ -130,12 +132,65 @@ def find_stock(stock):
         soup = BeautifulSoup(data,"html.parser")
         n_text = soup.find_all("a",href = "/twstock/profile/"+stock+".htm")
         if n_text:
-            return True
+            output = []
+            for s in n_text:
+                output.append(s.string)
+            return output
         s_text = soup.find_all("a")
         for content in s_text:
             if stock == content.string:
                 number1 = content["href"]
                 number2 = number1.split('/')
                 number3 = number2[3].split(".")
-                return number3[0]
+                output = [number3[0],stock]
+                return output
     return False
+
+def change_stock_now(stock_number):
+    text_request = urllib.request.urlopen("https://invest.cnyes.com/twstock/tws/"+stock_number)
+    soup = BeautifulSoup(text_request,"html.parser")
+    stock_now_info = soup.find("div",class_="jsx-2941083017 info-lp")
+    flex_message.stock_now["body"]["contents"][1]["contents"][1]["text"] = stock_now_info.string
+    stock_now_info = soup.find("div",class_="jsx-2941083017 change-net")
+    flex_message.stock_now["body"]["contents"][2]["contents"][1]["text"] = stock_now_info.string
+    if stock_now_info.string[0] == "+":
+        flex_message.stock_now["body"]["contents"][1]["contents"][1]["color"] = "#ff0000"
+        flex_message.stock_now["body"]["contents"][2]["contents"][1]["color"] = "#ff0000"
+        flex_message.stock_now["body"]["contents"][3]["contents"][1]["color"] = "#ff0000"
+    elif stock_now_info.string[0] == "-":
+        flex_message.stock_now["body"]["contents"][1]["contents"][1]["color"] = "#00e038"
+        flex_message.stock_now["body"]["contents"][2]["contents"][1]["color"] = "#00e038"
+        flex_message.stock_now["body"]["contents"][3]["contents"][1]["color"] = "#00e038"
+    else:
+        flex_message.stock_now["body"]["contents"][1]["contents"][1]["color"] = "#ffea00"
+        flex_message.stock_now["body"]["contents"][2]["contents"][1]["color"] = "#ffea00"
+        flex_message.stock_now["body"]["contents"][3]["contents"][1]["color"] = "#ffea00"
+    stock_now_info = soup.find("div",class_="jsx-2941083017 change-percent")
+    flex_message.stock_now["body"]["contents"][3]["contents"][1]["text"] = stock_now_info.string
+    stock_now_info = soup.find_all("div",class_="jsx-2687283247 jsx-1763002358 block-value block-value--")
+    flex_message.stock_now["body"]["contents"][4]["contents"][1]["text"] = stock_now_info[0].string
+    flex_message.stock_now["body"]["contents"][5]["contents"][1]["text"] = stock_now_info[1].string
+    flex_message.stock_now["body"]["contents"][6]["contents"][1]["text"] = stock_now_info[2].string
+    stock_now_info = soup.find_all("p",class_="jsx-2963066371 jsx-556393929")
+    flex_message.stock_now["body"]["contents"][7]["contents"][1]["contents"][0]["text"] = stock_now_info[2].string
+    flex_message.stock_now["body"]["contents"][7]["contents"][1]["contents"][1]["text"] = stock_now_info[3].string
+
+def change_stock_history(stock_number):
+    text_request = urllib.request.urlopen("https://ws.api.cnyes.com/ws/api/v1/quote/quotes/TWS%3A"+stock_number+"%3ASTOCK?column=J")
+    raw_data = text_request.read()
+    encoding = text_request.info().get_content_charset('utf8')
+    data = json.loads(raw_data.decode(encoding))
+    flex_message.stock_history["body"]["contents"][2]["contents"][1]["text"] = str(data["data"][0]["7952"])
+    flex_message.stock_history["body"]["contents"][4]["contents"][1]["text"] = str(data["data"][0]["3380"])
+    flex_message.stock_history["body"]["contents"][6]["contents"][1]["text"] = str(data["data"][0]["3378"])
+    flex_message.stock_history["body"]["contents"][8]["contents"][1]["text"] = str(data["data"][0]["3379"])
+    flex_message.stock_history["body"]["contents"][10]["contents"][1]["text"] = str(data["data"][0]["3381"])
+    flex_message.stock_history["body"]["contents"][12]["contents"][1]["text"] = str(data["data"][0]["200050"])
+    for number in range(1,7):
+        color = flex_message.stock_history["body"]["contents"][number*2]["contents"][1]["text"][0]
+        if color == "-":
+            flex_message.stock_history["body"]["contents"][number*2]["contents"][1]["color"] = "#00e038" 
+        else:
+            flex_message.stock_history["body"]["contents"][number*2]["contents"][1]["color"] = "#ff0000" 
+
+
