@@ -4,7 +4,7 @@
 ### Bot basic ID：@800szswu
 
 ### QR code：
-![QR code](https://qr-official.line.me/sid/L/800szswu.png)
+![QR code](https://i.imgur.com/waTO8Tl.png)
 ---
 ### 創作理念
 因為網路上的股票資訊都非常雜亂，所以做了一個查詢股票資訊的工具，裡面可以查台股的一些基本資訊及美國具指標性的三個指數，另外也有分析各股資訊給予買賣的建議
@@ -12,12 +12,12 @@
 ## 操作使用
 首先用上述資訊加入Line好友(股票小幫手)
 
-![picture](https://i.imgur.com/nGFLbdY.png =300x)
+<img width="300" alt="portfolio_view" src="https://i.imgur.com/nGFLbdY.png">
 
 接著輸入start開始，因為後端只有一個程式在跑，若有人已經使用start開始，則輸入menu回到功能選單
 
 ### 開始使用
-![picture](https://i.imgur.com/PBBRdtH.jpg =300x)
+<img width="300" alt="picture" src="https://i.imgur.com/PBBRdtH.jpg">
 
 在功能選單中可以選擇直接開始使用，或者是查詢fsm圖，另外點擊github按鈕則可直接連接到此repository
 
@@ -28,10 +28,10 @@
 - 台股大盤指數可看即時資訊及歷史績效
 
 #### 台股大盤指數
-![picture](https://i.imgur.com/jehw9a7.jpg =500x)
+<img width="500" alt="picture" src="https://i.imgur.com/jehw9a7.jpg">
 
 #### 美股指數
-![picture](https://i.imgur.com/U6nH1FV.jpg =500x)
+<img width="500" alt="picture" src="https://i.imgur.com/U6nH1FV.jpg">
 
 ### 台股查詢
 - 請先輸入上市公司名稱或代碼
@@ -39,10 +39,10 @@
 - <font color=#ff0000>注意！！只提供上市公司股票查詢，上櫃公司及ETF等資訊則不提供</font>
 
 #### 即時資訊
-![picture](https://i.imgur.com/0Vi1cIv.jpg =400x)
+<img width="500" alt="picture" src="https://i.imgur.com/0Vi1cIv.jpg">
 
 #### 推薦程度
-![picture](https://i.imgur.com/I3ZiqLp.jpg =400x)
+<img width="500" alt="picture" src="https://i.imgur.com/I3ZiqLp.jpg">
 
 #### 推薦程度如何產生
 - 短期投資：考慮當日內外盤比，近期三大法人買賣超，近期與大盤績效的差值
@@ -87,9 +87,9 @@ python3 app.py #開啟本地端伺服器
 到[Line developer](https://developers.line.biz/en/)設定Webhook URL
 
 ## Reference
- [葉家彣／成功大學電機系109](https://github.com/vickyyeh/Linebot)
- [Template Code for TOC Project 2020](https://github.com/NCKU-CCS/TOC-Project-2020)
- 資訊參考-[Mr. Market 市場先生](https://rich01.com/)
+ [葉家彣／成功大學電機系109](https://github.com/vickyyeh/Linebot)  
+ [Template Code for TOC Project 2020](https://github.com/NCKU-CCS/TOC-Project-2020)  
+ 資訊參考-[Mr. Market 市場先生](https://rich01.com/)  
  
- >made by [KJay221](https://github.com/KJay221)
+ >made by [KJay221](https://github.com/KJay221)  
  >[說明文件](https://hackmd.io/zRgJNF5eQgunq8gQof-OWg?view)
