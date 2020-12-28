@@ -21,11 +21,11 @@ if not os.path.exists("./img"):
         print ("Creation of the directory %s failed" % img_folder_path)
 
 machine = TocMachine(
-    states=["user", "begin", "fsm", "start", "index", "search", "USA_index", "index_search", "index_chart", "TW_index", "TW_history", "TW_now", "stock_list"],
+    states=["user", "begin","fsm","start","index","search","USA_index","index_search","index_chart","TW_index","TW_history","TW_now","stock_list","stock_now","stock_history","stock_recommend"],
     transitions=[
         {"trigger": "advance","source": ["user","start"],"dest": "begin","conditions": "is_going_to_begin"},
         {"trigger": "advance","source": "begin","dest": "fsm","conditions": "is_going_to_fsm"},
-        {"trigger": "advance","source": ["begin","index","index_chart","TW_now","TW_history"],"dest": "start","conditions": "is_going_to_start"},
+        {"trigger": "advance","source": ["begin","index","index_chart","TW_now","TW_history","search","stock_now","stock_history","stock_recommend"],"dest": "start","conditions": "is_going_to_start"},
         {"trigger": "advance","source": ["start","TW_index","index_search"],"dest": "index","conditions": "is_going_to_index"},
         {"trigger": "advance","source": "index","dest": "USA_index","conditions": "is_going_to_USA_index"},
         {"trigger": "advance","source": ["USA_index","index_chart"],"dest": "index_search","conditions": "is_going_to_index_search"},
@@ -33,10 +33,13 @@ machine = TocMachine(
         {"trigger": "advance","source": ["index","TW_now","TW_history"],"dest": "TW_index","conditions": "is_going_to_TW_index"},
         {"trigger": "advance","source": "TW_index","dest": "TW_now","conditions": "is_going_to_TW_now"},
         {"trigger": "advance","source": "TW_index","dest": "TW_history","conditions": "is_going_to_TW_history"},
-        {"trigger": "advance","source": "start","dest": "search","conditions": "is_going_to_search",},
-        {"trigger": "advance","source": "search","dest": "stock_list","conditions": "is_going_to_stock_list",},
+        {"trigger": "advance","source": ["start","stock_list"],"dest": "search","conditions": "is_going_to_search",},
+        {"trigger": "advance","source": ["search","stock_now","stock_history","stock_recommend"],"dest": "stock_list","conditions": "is_going_to_stock_list",},
+        {"trigger": "advance","source": "stock_list","dest": "stock_now","conditions": "is_going_to_stock_now",},
+        {"trigger": "advance","source": "stock_list","dest": "stock_history","conditions": "is_going_to_stock_history",},
+        {"trigger": "advance","source": "stock_list","dest": "stock_recommend","conditions": "is_going_to_stock_recommend",},
         #back
-        {"trigger": "go_back", "source": ["fsm","stock_list"], "dest": "begin"},
+        {"trigger": "go_back", "source": ["fsm","start","index","search","USA_index","index_search","index_chart","TW_index","TW_history","TW_now","stock_list","stock_now","stock_history","stock_recommend"], "dest": "begin"},
     ],
     initial="user",
     auto_transitions=False,
@@ -88,12 +91,14 @@ def webhook_handler():
             response = False
         if response == False:
             if machine.state == 'search':
-                send_text_message(event.reply_token, "股票名稱或代碼不存在請再次輸入\n或輸入menu返回主選單")
+                send_text_message(event.reply_token, "股票名稱或代碼不存在請再次輸入\n或輸入back返回主選單\n或輸入menu返回功能選擇")
+            elif machine.state == 'begin':
+                send_text_message(event.reply_token, "請依照指示與按鈕來操作!")
             elif machine.state != 'user':
                 if event.message.text.lower() == 'menu':
                     machine.go_back(event)
                 else:
-                    send_text_message(event.reply_token, "請依照指示與按鈕來操作!\n或輸入menu返回主選單")
+                    send_text_message(event.reply_token, "請依照指示與按鈕來操作!\n或輸入menu返回功能選單")
             else:
                 send_text_message(event.reply_token, "請輸入『start』開始")
 
