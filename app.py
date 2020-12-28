@@ -91,14 +91,14 @@ def webhook_handler():
             response = False
         if response == False:
             if machine.state == 'search':
-                send_text_message(event.reply_token, "股票名稱或代碼不存在請再次輸入\n或輸入back返回主選單\n或輸入menu返回功能選擇")
+                send_text_message(event.reply_token, "股票名稱或代碼不存在請再次輸入\n或輸入『back』返回主選單\n或輸入『menu』返回功能選擇")
             elif machine.state == 'begin':
-                send_text_message(event.reply_token, "請依照指示與按鈕來操作!")
+                send_text_message(event.reply_token, "請依照指示與按鈕來操作!\n或輸入『開始使用』以開始\n或輸入『fsm圖』查看內容")
             elif machine.state != 'user':
                 if event.message.text.lower() == 'menu':
                     machine.go_back(event)
                 else:
-                    send_text_message(event.reply_token, "請依照指示與按鈕來操作!\n或輸入menu返回功能選單")
+                    send_text_message(event.reply_token, "請依照指示與按鈕來操作!\n或輸入『menu』返回功能選單")
             else:
                 send_text_message(event.reply_token, "請輸入『start』開始")
 
