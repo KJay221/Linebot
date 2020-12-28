@@ -86,6 +86,10 @@ python3 app.py #開啟本地端伺服器
 #### Webhook settings
 到[Line developer](https://developers.line.biz/en/)設定Webhook URL
 
+#### 補充說明
+- master branch用以本地端測試
+- deploy branch用以部屬於heroku
+
 ## Reference
 [葉家彣／成功大學電機系109](https://github.com/vickyyeh/Linebot)  
 [Template Code for TOC Project 2020](https://github.com/NCKU-CCS/TOC-Project-2020)  
