@@ -171,5 +171,16 @@ class TocMachine(GraphMachine):
     
     def on_enter_stock_history(self, event):
         reply_token = event.reply_token
+        flex_message.stock_history["body"]["contents"][0]["text"] = stock[1]
         other_function.change_stock_history(stock[0])
         send_flex_message(reply_token,"stock_list",flex_message.stock_history)
+
+    def is_going_to_stock_recommend(self, event):
+        text = event.message.text
+        return text == "推薦程度"
+    
+    def on_enter_stock_recommend(self, event):
+        reply_token = event.reply_token
+        flex_message.stock_recommend["body"]["contents"][0]["text"] = stock[1]
+        other_function.change_stock_recommend(stock[0])
+        send_flex_message(reply_token,"stock_list",flex_message.stock_recommend)

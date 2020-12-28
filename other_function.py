@@ -13,7 +13,6 @@ import flex_message
 
 load_dotenv()
 
-
 imgur_key = os.getenv("IMGUR_KEY", None)
 if imgur_key is None:
     print("Specify IMGUR_KEY as environment variable.")
@@ -174,23 +173,99 @@ def change_stock_now(stock_number):
     stock_now_info = soup.find_all("p",class_="jsx-2963066371 jsx-556393929")
     flex_message.stock_now["body"]["contents"][7]["contents"][1]["contents"][0]["text"] = stock_now_info[2].string
     flex_message.stock_now["body"]["contents"][7]["contents"][1]["contents"][1]["text"] = stock_now_info[3].string
+    width = stock_now_info[2].string.split(".")
+    width1 = int(width[0])*3
+    width = stock_now_info[3].string.split(".")
+    width2 = int(width[0])*3
+    width1 = str(width1)+"px"
+    width2 = str(width2)+"px"
+    flex_message.stock_now["body"]["contents"][7]["contents"][2]["contents"][0]["width"] =width1
+    flex_message.stock_now["body"]["contents"][7]["contents"][2]["contents"][1]["width"] =width2
 
 def change_stock_history(stock_number):
     text_request = urllib.request.urlopen("https://ws.api.cnyes.com/ws/api/v1/quote/quotes/TWS%3A"+stock_number+"%3ASTOCK?column=J")
     raw_data = text_request.read()
     encoding = text_request.info().get_content_charset('utf8')
     data = json.loads(raw_data.decode(encoding))
-    flex_message.stock_history["body"]["contents"][2]["contents"][1]["text"] = str(data["data"][0]["7952"])
-    flex_message.stock_history["body"]["contents"][4]["contents"][1]["text"] = str(data["data"][0]["3380"])
-    flex_message.stock_history["body"]["contents"][6]["contents"][1]["text"] = str(data["data"][0]["3378"])
-    flex_message.stock_history["body"]["contents"][8]["contents"][1]["text"] = str(data["data"][0]["3379"])
-    flex_message.stock_history["body"]["contents"][10]["contents"][1]["text"] = str(data["data"][0]["3381"])
-    flex_message.stock_history["body"]["contents"][12]["contents"][1]["text"] = str(data["data"][0]["200050"])
+    flex_message.stock_history["body"]["contents"][2]["contents"][1]["text"] = str(data["data"][0]["7952"])+"%"
+    flex_message.stock_history["body"]["contents"][4]["contents"][1]["text"] = str(data["data"][0]["3380"])+"%"
+    flex_message.stock_history["body"]["contents"][6]["contents"][1]["text"] = str(data["data"][0]["3378"])+"%"
+    flex_message.stock_history["body"]["contents"][8]["contents"][1]["text"] = str(data["data"][0]["3379"])+"%"
+    flex_message.stock_history["body"]["contents"][10]["contents"][1]["text"] = str(data["data"][0]["3381"])+"%"
+    flex_message.stock_history["body"]["contents"][12]["contents"][1]["text"] = str(data["data"][0]["200050"])+"%"
     for number in range(1,7):
         color = flex_message.stock_history["body"]["contents"][number*2]["contents"][1]["text"][0]
         if color == "-":
-            flex_message.stock_history["body"]["contents"][number*2]["contents"][1]["color"] = "#00e038" 
+            flex_message.stock_history["body"]["contents"][number*2]["contents"][1]["color"] = "#00e038"
         else:
-            flex_message.stock_history["body"]["contents"][number*2]["contents"][1]["color"] = "#ff0000" 
+            flex_message.stock_history["body"]["contents"][number*2]["contents"][1]["color"] = "#ff0000"
 
-
+def change_stock_recommend(stock_number):
+    #short time
+    short_score = 0
+    text_request = urllib.request.urlopen("https://invest.cnyes.com/twstock/tws/"+stock_number)
+    soup = BeautifulSoup(text_request,"html.parser")
+    stock_now_info = soup.find_all("p",class_="jsx-2963066371 jsx-556393929")
+    text = stock_now_info[3].string
+    text = text.replace("%","")
+    rate = float(text)
+    if rate >= 57:
+        short_score+=10
+    text_request = urllib.request.urlopen("https://marketinfo.api.cnyes.com/mi/api/v1/investors/buysell/TWS%3A"+stock_number+"%3ASTOCK/6")
+    raw_data = text_request.read()
+    encoding = text_request.info().get_content_charset('utf8')
+    data = json.loads(raw_data.decode(encoding))
+    sum = 0
+    for index in range(0,6):
+        sum+=data["data"][index]["totalNetBuySellVolume"]
+    if sum > 500:
+        short_score += 30
+    text_request = urllib.request.urlopen("https://ws.api.cnyes.com/ws/api/v1/quote/quotes/TWS%3ATSE01%3AINDEX?column=J")
+    raw_data = text_request.read()
+    encoding = text_request.info().get_content_charset('utf8')
+    rate_all = json.loads(raw_data.decode(encoding))
+    text_request = urllib.request.urlopen("https://ws.api.cnyes.com/ws/api/v1/quote/quotes/TWS%3A"+stock_number+"%3ASTOCK?column=J")
+    raw_data = text_request.read()
+    encoding = text_request.info().get_content_charset('utf8')
+    rate_stock = json.loads(raw_data.decode(encoding))
+    rate_stock = float(rate_stock["data"][0]["7952"])
+    rate_all = float(rate_all["data"][0]["7952"])
+    short_score += (rate_stock-rate_all)*4
+    if short_score >= 60:
+        flex_message.stock_recommend["body"]["contents"][2]["contents"][1]["text"] = "買進"
+    elif short_score >= 30 and short_score < 60:
+        flex_message.stock_recommend["body"]["contents"][2]["contents"][1]["text"] = "持有"
+    else:
+        flex_message.stock_recommend["body"]["contents"][2]["contents"][1]["text"] = "賣出"
+    
+    #long time
+    long_score = 0
+    text_request = urllib.request.urlopen("https://invest.cnyes.com/twstock/tws/"+stock_number)
+    soup = BeautifulSoup(text_request,"html.parser")
+    data = soup.find_all("div",class_="jsx-2687283247 jsx-1763002358 block-value block-value--")
+    if data[4].string != "本益比為負值":
+        rate = float(data[4].string)
+    else:
+        rate = 0
+    if rate <= 20:
+        long_score+=10
+    text_request = urllib.request.urlopen("https://ws.api.cnyes.com/ws/api/v1/quote/quotes/TWS:TSE01:INDEX?column=G")
+    raw_data = text_request.read()
+    encoding = text_request.info().get_content_charset('utf8')
+    rate_all_origin = json.loads(raw_data.decode(encoding))
+    text_request = urllib.request.urlopen("https://ws.api.cnyes.com/ws/api/v1/quote/quotes/TWS%3A"+stock_number+"%3ASTOCK?column=J")
+    raw_data = text_request.read()
+    encoding = text_request.info().get_content_charset('utf8')
+    rate_stock_origin = json.loads(raw_data.decode(encoding))
+    rate_stock = float(rate_stock_origin["data"][0]["3381"])
+    rate_all = float(rate_all_origin["data"][0]["3381"])
+    long_score += (rate_stock-rate_all)*2.333333
+    rate_stock = float(rate_stock_origin["data"][0]["3379"])
+    rate_all = float(rate_all_origin["data"][0]["3379"])
+    long_score += (rate_stock-rate_all)
+    if long_score >= 50:
+        flex_message.stock_recommend["body"]["contents"][3]["contents"][1]["text"] = "買進"
+    elif long_score >= 25 and long_score < 50:
+        flex_message.stock_recommend["body"]["contents"][3]["contents"][1]["text"] = "持有"
+    else:
+        flex_message.stock_recommend["body"]["contents"][3]["contents"][1]["text"] = "賣出"

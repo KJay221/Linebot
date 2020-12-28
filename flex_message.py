@@ -760,10 +760,6 @@ begin = {
     "size": "full",
     "aspectRatio": "20:15",
     "aspectMode": "cover",
-    "action": {
-      "type": "uri",
-      "uri": "http://linecorp.com/"
-    }
   },
   "body": {
     "type": "box",
@@ -775,10 +771,6 @@ begin = {
         "weight": "bold",
         "size": "xl",
         "align": "center",
-        "action": {
-          "type": "uri",
-          "uri": "https://github.com/KJay221/Linebot"
-        }
       }
     ]
   },
@@ -816,9 +808,9 @@ begin = {
       {
         "type": "button",
         "action": {
-          "type": "message",
-          "label": "介紹與說明",
-          "text": "介紹與說明"
+          "label": "github",
+          "type": "uri",
+          "uri": "https://github.com/KJay221/Linebot"
         }
       }
     ],
@@ -1065,6 +1057,36 @@ stock_now = {
                 "size": "xl"
               }
             ]
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "margin": "lg",
+            "spacing": "sm",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "none",
+                "contents": [],
+                "width": "150px",
+                "height": "10px",
+                "backgroundColor": "#00e030",
+                "offsetTop": "none",
+                "margin": "none"
+              },
+              {
+                "type": "box",
+                "layout": "baseline",
+                "spacing": "none",
+                "contents": [],
+                "backgroundColor": "#ff0000",
+                "height": "10px",
+                "width": "150px",
+                "margin": "none"
+              }
+            ],
+            "justifyContent": "center"
           }
         ],
         "margin": "md"
@@ -1270,6 +1292,96 @@ stock_history = {
         },
         "height": "sm",
         "style": "primary"
+      }
+    ],
+    "flex": 0
+  }
+}
+
+stock_recommend = {
+  "type": "bubble",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "台積電",
+        "weight": "bold",
+        "size": "xl"
+      },
+      {
+        "type": "text",
+        "text": "推薦程度",
+        "margin": "none"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+          {
+            "type": "text",
+            "text": "短期投資：",
+            "size": "lg"
+          },
+          {
+            "type": "text",
+            "text": "持有",
+            "margin": "none",
+            "size": "lg"
+          }
+        ],
+        "spacing": "none",
+        "margin": "xxl"
+      },
+      {
+        "type": "box",
+        "layout": "baseline",
+        "contents": [
+          {
+            "type": "text",
+            "text": "長期投資：",
+            "size": "lg"
+          },
+          {
+            "type": "text",
+            "text": "持有",
+            "margin": "none",
+            "size": "lg"
+          }
+        ],
+        "spacing": "none",
+        "margin": "xxl"
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "separator"
+      },
+      {
+        "type": "button",
+        "style": "primary",
+        "height": "sm",
+        "action": {
+          "type": "message",
+          "label": "返回查詢",
+          "text": "返回查詢"
+        }
+      },
+      {
+        "type": "button",
+        "style": "primary",
+        "height": "sm",
+        "action": {
+          "type": "message",
+          "label": "回主選單",
+          "text": "回主選單"
+        }
       }
     ],
     "flex": 0
