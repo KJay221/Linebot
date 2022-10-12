@@ -93,7 +93,6 @@ python3 app.py #開啟本地端伺服器
 ## Reference
 [葉家彣／成功大學電機系109](https://github.com/vickyyeh/Linebot)  
 [Template Code for TOC Project 2020](https://github.com/NCKU-CCS/TOC-Project-2020)  
-資訊參考-[Mr. Market 市場先生](https://rich01.com/)  
 
 >made by [KJay221](https://github.com/KJay221)  
 >[說明文件](https://hackmd.io/zRgJNF5eQgunq8gQof-OWg?view)
